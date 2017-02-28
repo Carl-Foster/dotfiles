@@ -11,7 +11,7 @@ set showmode " show insert/replace/visual mode
 set confirm " confirm :q in case of unsaved changes
 set fileencoding=utf-8 " encoding used when saving file
 set nobackup " do not keep the backup~ file
-set fileformat=unix " use unix line endings for consistency
+set ff=unix " use unix line endings for consistency
 
 " edit settings
 set backspace=indent,eol,start " backspacing over everything in insert mode
@@ -34,7 +34,6 @@ filetype plugin on " load the plugins for specific file types
 filetype indent on " automatically indent code
 
 " syntax highlighting
-colorscheme solarized " set color scheme, must be installed first
 set background=dark " dark background for console
 syntax enable " enable syntax highlighting
 

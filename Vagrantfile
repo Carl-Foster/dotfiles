@@ -17,6 +17,7 @@ Vagrant.configure("2") do |config|
 
     base.vm.provision "file", source: ".bashrc", destination: ".bashrc", run: "always"
     base.vm.provision "file", source: ".vimrc", destination: ".vimrc", run: "always"
+    base.vm.provision "shell", path: "./setup.sh", privileged: false
   end
 
 end
