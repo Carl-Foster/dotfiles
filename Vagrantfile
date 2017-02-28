@@ -14,6 +14,9 @@ Vagrant.configure("2") do |config|
     base.vm.provider "virtualbox" do |virtualbox|
       virtualbox.memory = 2048
     end
+
+    base.vm.provision "file", source: ".bashrc", destination: ".bashrc", run: "always"
+    base.vm.provision "file", source: ".vimrc", destination: ".vimrc", run: "always"
   end
 
 end
