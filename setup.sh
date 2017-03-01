@@ -3,6 +3,7 @@
 cp /home/vagrant/vm-folders/.bashrc ~/.bashrc
 cp /home/vagrant/vm-folders/.vimrc ~/.vimrc
 cp /home/vagrant/vm-folders/.nvmrc ~/.nvmrc
+cp /home/vagrant/vm-folders/.gitconfig ~/.gitconfig
 echo "Hello!"
 
 # Download and install NVM
