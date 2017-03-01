@@ -12,4 +12,4 @@ export NVM_DIR="$HOME/.nvm"
 
 cd ~
 nvm install
-npm install -g @angular/cli
+npm install -g @angular/cli --quiet
