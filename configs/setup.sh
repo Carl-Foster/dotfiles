@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-cp /home/vagrant/vm-folders/.bashrc ~/.bashrc
-cp /home/vagrant/vm-folders/.vimrc ~/.vimrc
-cp /home/vagrant/vm-folders/.nvmrc ~/.nvmrc
-cp /home/vagrant/vm-folders/.gitconfig ~/.gitconfig
+cp /home/vagrant/vm-folders/configs/.bashrc ~/.bashrc
+cp /home/vagrant/vm-folders/configs/.vimrc ~/.vimrc
+cp /home/vagrant/vm-folders/configs/.nvmrc ~/.nvmrc
+cp /home/vagrant/vm-folders/configs/.gitconfig ~/.gitconfig
 echo "Hello!"
 
 # Download and install NVM

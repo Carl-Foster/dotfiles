@@ -10,15 +10,16 @@ Vagrant.configure("2") do |config|
     base.vm.box = "ubuntu/trusty64"
     base.vm.network "private_network", ip: "192.168.42.41"
     base.vm.network "forwarded_port", guest:4200, host: 4200
+    base.vm.network "forwarded_port", guest:3000, host: 3000
     base.vm.synced_folder ".", "/home/vagrant/vm-folders", create: true
     base.vm.provider "virtualbox" do |virtualbox|
       virtualbox.memory = 2048
     end
 
-    base.vm.provision "file", source: ".bashrc", destination: ".bashrc", run: "always"
-    base.vm.provision "file", source: ".vimrc", destination: ".vimrc", run: "always"
-    base.vm.provision "file", source: ".nvmrc", destination: ".nvmrc"
-    base.vm.provision "file", source: ".gitconfig", destination: ".gitconfig", run: "always"
+    base.vm.provision "file", source: "./configs/.bashrc", destination: ".bashrc", run: "always"
+    base.vm.provision "file", source: "./configs/.vimrc", destination: ".vimrc", run: "always"
+    base.vm.provision "file", source: "./configs/.nvmrc", destination: ".nvmrc"
+    base.vm.provision "file", source: "./configs/.gitconfig", destination: ".gitconfig", run: "always"
     base.vm.provision "shell", path: "./setup.sh", privileged: false
   end
 
