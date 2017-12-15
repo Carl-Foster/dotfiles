@@ -1,4 +1,6 @@
-
+set directory=$HOME/.vim//
+set backupdir=$HOME/.vim//
+set undodir=$HOME/.vim//
 set number
 set rnu
 
@@ -8,6 +10,13 @@ set hidden
 " Allows mouse interaction
 set mouse=a
 
+" Yanks and pastes off system clipboard as default clipboard
+set clipboard=unnamedplus
+
+" Allow modification of certain buffers
+set ma
+let g:netrw_bufsettings = 'noma nomod rnu nu nobl nowrap ro'
+
 filetype plugin indent on
 " show existing tab with 4 spaces width
 set tabstop=4
@@ -15,13 +24,6 @@ set tabstop=4
 set shiftwidth=4
 " On pressing tab, insert 4 spaces
 set expandtab
-
-" Yanks and pastes off system clipboard as default clipboard
-set clipboard=unnamedplus
-
-" Allow modification of certain buffers
-set ma
-let g:netrw_bufsettings = 'noma nomod rnu nu nobl nowrap ro'
 
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -54,13 +56,14 @@ Plug 'tpope/vim-fugitive'
 
 " Git gutter for buffers
 Plug 'airblade/vim-gitgutter'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Handy visualisation of jump commands (f & t)
 Plug 'unblevable/quick-scope'
 
 " Nice file explorer / interactions
 Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'octref/RootIgnore'
 
 " Apply editor config settings to buffers
 Plug 'editorconfig/editorconfig-vim'
@@ -98,6 +101,10 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 " Color Schemes
 Plug 'flazz/vim-colorschemes'
 Plug 'crusoexia/vim-monokai'
+
+" For high productivity
+Plug 'rbtnn/game_engine.vim'
+Plug 'rbtnn/mario.vim'
 call plug#end()
 colorscheme monokai
 
@@ -145,29 +152,38 @@ set completeopt=noinsert,menuone
 
 " aliases 
 nnoremap <leader>p :Files<CR>
+vnoremap <leader>p :Files<CR>
 nnoremap <leader>b :Buffers<CR>
+vnoremap <leader>b :Buffers<CR>
 nnoremap <leader>/ :Ag!<CR>
 " Show unsaved changes
 nnoremap <leader>uc :w !diff % -<CR>
 " Open current file in nerd tree
 nnoremap <leader>n :NERDTreeFind<CR>
-nnoremap <leader><leader> :w<CR>
+vnoremap <leader>n :NERDTreeFind<CR>
+nnoremap <leader><leader> <C-W>w
+vnoremap <leader><leader> <C-W>w
 " Yank visual selection into search
 vnoremap <leader>/ y/<C-R>"<CR>
 " Take visual selection and put it into search replace
 vnoremap <leader>r y:%s/<C-R>"
+" Take the current word under the cursor and start search and replace
+nnoremap <leader>r :%s/\<<C-r><C-w>\>/
 " Switch windows
-nnoremap <leader>w <C-W>w
+nnoremap <leader>w :w<CR>
+vnoremap <leader>w :w<CR>
 nnoremap <leader>] :TsuDefinition<CR>
 vnoremap <leader>] :TsuDefinition<CR>
 nnoremap <leader>} :YcmCompleter GoToReferences<CR>
 vnoremap <leader>} :YcmCompleter GoToReferences<CR>
 nnoremap <leader><CR> :TsuImport<CR>
+vnoremap <leader><CR> :TsuImport<CR>
 " Replace pane buffer on buffer deletion
 cnoreabbrev bd bp\|bd #
-inoremap <C-j> <C-X><C-O>
 " Don't overwrite clipboard on visual paste
 vnoremap p "ddP
+vnoremap y ygv<Esc>
+
 
 " Sensible multi cursor defaults
 let g:multi_cursor_start_key='<C-j>'
@@ -205,6 +221,7 @@ augroup END
 let NERDTreeShowHidden = 1
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let NERDTreeRespectWildIgnore = 1
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "*",
     \ "Staged"    : "✚",
@@ -230,3 +247,25 @@ nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 nmap <leader>k <Plug>AirlineSelectPrevTab
 nmap <leader>j <Plug>AirlineSelectNextTab
+
+" https://stackoverflow.com/questions/1534835/how-do-i-close-all-buffers-that-arent-shown-in-a-window-in-vim
+function! DeleteInactiveBufs()
+    "From tabpagebuflist() help, get a list of all buffers in all tabs
+    let tablist = []
+    for i in range(tabpagenr('$'))
+        call extend(tablist, tabpagebuflist(i + 1))
+    endfor
+
+    "Below originally inspired by Hara Krishna Dara and Keith Roberts
+    "http://tech.groups.yahoo.com/group/vim/message/56425
+    let nWipeouts = 0
+    for i in range(1, bufnr('$'))
+        if bufexists(i) && !getbufvar(i,"&mod") && index(tablist, i) == -1
+        "bufno exists AND isn't modified AND isn't in the list of buffers open in windows and tabs
+            silent exec 'bwipeout' i
+            let nWipeouts = nWipeouts + 1
+        endif
+    endfor
+    echomsg nWipeouts . ' buffer(s) wiped out'
+endfunction
+command! Bdi :call DeleteInactiveBufs()
