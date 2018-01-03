@@ -85,14 +85,17 @@ Plug 'honza/vim-snippets'
 Plug 'ervandew/supertab'
 Plug 'cristianoliveira/vim-react-html-snippets'
 
-" Syntax highlighting support (for errors etc.)
-Plug 'vim-syntastic/syntastic'
 
 " Typescript
 " Typescript styling
-Plug 'HerringtonDarkholme/yats.vim'
+" Plug 'HerringtonDarkholme/yats.vim'
 " Typescript utilities
 Plug 'quramy/tsuquyomi'
+
+" Syntax highlighting support (for errors etc.)
+Plug 'vim-syntastic/syntastic'
+Plug 'leafgarland/typescript-vim'
+Plug 'tasn/vim-tsx'
 
 
 " Auto completion / drop down / utilities for multi languages (and ts)
@@ -101,19 +104,23 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 " Color Schemes
 Plug 'flazz/vim-colorschemes'
 Plug 'crusoexia/vim-monokai'
+Plug 'skielbasa/vim-material-monokai'
 
 " For high productivity
 Plug 'rbtnn/game_engine.vim'
 Plug 'rbtnn/mario.vim'
 call plug#end()
-colorscheme monokai
+set termguicolors
+colorscheme material-monokai
+
+let g:materialmonokai_italic=1
 
 " Airline customization
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline_theme='minimalist'
+let g:airline_theme='materialmonokai'
 
 " Quick scope settings
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -131,7 +138,30 @@ let g:tsuquyomi_single_quote_import = 1
 let g:syntastic_typescript_checkers = ['tsuquyomi', 'tslint']
 
 " File fuzzy find all files in a project that aren't git ignored
-let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+" let $FZF_DEFAULT_COMMAND = 'ag -g "
+
+" Augmenting Ag command using fzf#vim#with_preview function
+"   * fzf#vim#with_preview([[options], preview window, [toggle keys...]])
+"     * For syntax-highlighting, Ruby and any of the following tools are required:
+"       - Highlight: http://www.andre-simon.de/doku/highlight/en/highlight.php
+"       - CodeRay: http://coderay.rubychan.de/
+"       - Rouge: https://github.com/jneen/rouge
+"
+"   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
+"   :Ag! - Start fzf in fullscreen and display the preview window above
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \                 <bang>0)
+
+" Similarly, we can apply it to fzf#vim#grep. To use ripgrep instead of ag:
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --vimgrep --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!{.git,node_modules,js}" --color "always" '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
 
 " Use space as leader key
 let mapleader = "\<Space>"

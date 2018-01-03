@@ -1,4 +1,6 @@
 # .bashrc
+alias vim=vimx
+alias vi=vimx
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -8,9 +10,16 @@ fi
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
+if [ -f $(which powerline-daemon) ]; then
+    powerline-daemon -q
+    POWERLINE_BASH_CONTINUATION=1
+    POWERLINE_BASE_SELECT=1
+    . /usr/share/powerline/bash/powerline.sh
+fi
+
 # User specific aliases and functions
 tmux attach &> /dev/null
-[[ $TERM != "screen" && $TERM != "screen-256color" ]] && tmux
+[ -z "$TMUX" ] && tmux
 
 [[ ! -e "$HOME/.cargo" ]] && curl https://sh.rustup.rs -sSf | sh && source "$HOME/.cargo/env"
 
@@ -21,3 +30,6 @@ export NVM_DIR="$HOME/.nvm"
 [[ $(nvm version) == "none" ]] && nvm install lts/carbon
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,js}/*" 2> /dev/null'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+bind -x '"\C-p": vim $(fzf);'
