@@ -111,7 +111,7 @@ Plug 'rbtnn/game_engine.vim'
 Plug 'rbtnn/mario.vim'
 Plug 'tomlion/vim-solidity'
 call plug#end()
-" set termguicolors
+set termguicolors
 colorscheme material-monokai
 
 let g:materialmonokai_italic=1
