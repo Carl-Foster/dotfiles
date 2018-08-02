@@ -79,6 +79,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+
 " Snippet support
 Plug 'sirver/ultisnips'
 Plug 'honza/vim-snippets'
@@ -96,6 +97,8 @@ Plug 'quramy/tsuquyomi'
 Plug 'vim-syntastic/syntastic'
 Plug 'leafgarland/typescript-vim'
 Plug 'tasn/vim-tsx'
+Plug 'tomlion/vim-solidity'
+Plug 'pangloss/vim-javascript'
 
 
 " Auto completion / drop down / utilities for multi languages (and ts)
@@ -109,19 +112,19 @@ Plug 'skielbasa/vim-material-monokai'
 " For high productivity
 Plug 'rbtnn/game_engine.vim'
 Plug 'rbtnn/mario.vim'
-Plug 'tomlion/vim-solidity'
+Plug 'chriskempson/base16-vim'
 call plug#end()
-" set termguicolors
-colorscheme material-monokai
-
-let g:materialmonokai_italic=1
+set termguicolors
+if filereadable(expand("~/.vimrc_background"))
+  source ~/.vimrc_background
+endif
 
 " Airline customization
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline_theme='materialmonokai'
+let g:airline_theme = 'base16_default'
 
 " Quick scope settings
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -137,6 +140,20 @@ let g:tsuquyomi_disable_quickfix = 1
 let g:tsuquyomi_completion_detail = 1
 let g:tsuquyomi_single_quote_import = 1
 let g:syntastic_typescript_checkers = ['tsuquyomi', 'tslint']
+
+" Javascript
+let g:javascript_conceal_function             = "ƒ"
+let g:javascript_conceal_null                 = "ø"
+let g:javascript_conceal_this                 = "@"
+let g:javascript_conceal_return               = "⇚"
+let g:javascript_conceal_undefined            = "¿"
+let g:javascript_conceal_NaN                  = "ℕ"
+let g:javascript_conceal_prototype            = "¶"
+let g:javascript_conceal_static               = "•"
+let g:javascript_conceal_super                = "Ω"
+let g:javascript_conceal_arrow_function       = "⇒"
+let g:javascript_conceal_noarg_arrow_function = "🞅"
+let g:javascript_conceal_underscore_arrow_function = "🞅"
 
 " File fuzzy find all files in a project that aren't git ignored
 " let $FZF_DEFAULT_COMMAND = 'ag -g "
@@ -300,3 +317,7 @@ function! DeleteInactiveBufs()
     echomsg nWipeouts . ' buffer(s) wiped out'
 endfunction
 command! Bdi :call DeleteInactiveBufs()
+
+augroup filetypedetect
+    au BufRead,BufNewFile Dockerfile* set filetype=dockerfile
+augroup END
